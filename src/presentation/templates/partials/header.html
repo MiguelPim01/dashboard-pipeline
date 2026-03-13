@@ -1,0 +1,36 @@
+<header class="page-header">
+  <div class="header-top">
+    <div>
+      <h1 class="page-title">{{ report.metadata.title }}</h1>
+      {% if report.metadata.subtitle %}
+        <p class="page-subtitle">{{ report.metadata.subtitle }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="meta-strip">
+    <div class="meta-card">
+      <span class="meta-label">Table</span>
+      <span class="meta-value">{{ report.metadata.table_qualified_name }}</span>
+    </div>
+
+    {% if report.metadata.row_count is not none %}
+      <div class="meta-card">
+        <span class="meta-label">Rows</span>
+        <span class="meta-value">{{ report.metadata.row_count }}</span>
+      </div>
+    {% endif %}
+
+    {% if report.metadata.execution_duration_ms is not none %}
+      <div class="meta-card">
+        <span class="meta-label">Execution time</span>
+        <span class="meta-value">{{ report.metadata.execution_duration_ms }} ms</span>
+      </div>
+    {% endif %}
+
+    <div class="meta-card">
+      <span class="meta-label">Generated at</span>
+      <span class="meta-value">{{ report.metadata.generated_at }}</span>
+    </div>
+  </div>
+</header>

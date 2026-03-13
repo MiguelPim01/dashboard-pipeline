@@ -1,0 +1,26 @@
+<article class="widget-box" id="widget-{{ widget.widget_id }}">
+  <h3 class="widget-title">{{ widget.title }}</h3>
+  {% if widget.subtitle %}
+    <div class="widget-subtitle">{{ widget.subtitle }}</div>
+  {% endif %}
+
+  <div class="chart-shell">
+    <div class="chart-canvas-wrap" style="height: {{ widget.height_px }}px;">
+      <canvas class="chart-canvas"
+              data-chart-type="{{ widget.chart_type.value }}"
+              data-chart-labels='{{ widget.labels | tojson }}'
+              data-chart-datasets='[
+                {%- for dataset in widget.datasets -%}
+                  {"label": {{ dataset.label | tojson }}, "data": {{ dataset.values | list | tojson }}}
+                  {%- if not loop.last %}, {% endif -%}
+                {%- endfor -%}
+              ]'
+              data-chart-stacked="{{ 'true' if widget.stacked else 'false' }}"></canvas>
+    </div>
+
+    <details>
+      <summary class="muted" style="cursor: pointer; margin-top: 10px;">Show chart payload</summary>
+      <pre class="chart-debug">{{ render_widget(widget) | e }}</pre>
+    </details>
+  </div>
+</article>

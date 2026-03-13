@@ -1,0 +1,27 @@
+<article class="widget-box" id="widget-{{ widget.widget_id }}">
+  <h3 class="widget-title">{{ widget.title }}</h3>
+  {% if widget.subtitle %}
+    <div class="widget-subtitle">{{ widget.subtitle }}</div>
+  {% endif %}
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          {% for column in widget.columns %}
+            <th>{{ column }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in widget.rows %}
+          <tr>
+            {% for value in row %}
+              <td>{{ value }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</article>
