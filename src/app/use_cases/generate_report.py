@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import logging
 from pathlib import Path
 from typing import Iterable
+from tqdm import tqdm
 
 from src.app.contracts import DatabaseExecutor, MetricCollector, ReportRenderer
 from src.app.dto import (
@@ -121,7 +122,7 @@ class GenerateReportUseCase:
         logger.info("Executing collectors")
         logger.debug("Collectors configured", extra={"collector_count": len(self._collectors), "fail_fast": self._fail_fast})
 
-        for collector in sorted(self._collectors, key=lambda item: (item.order, item.name)):
+        for collector in tqdm(sorted(self._collectors, key=lambda item: (item.order, item.name)), desc="Collectors", unit="col"):
             if not collector.is_enabled(context):
                 logger.debug(
                     "Collector skipped",

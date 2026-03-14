@@ -1,13 +1,13 @@
 <div class="cards-grid">
   {% for widget in cards %}
-    <article class="card" id="widget-{{ widget.widget_id }}">
-      <h3 class="card-title">{{ widget.title }}</h3>
-      <p class="card-value">{{ widget.value }}</p>
+    <article class="card kpi-card" id="widget-{{ widget.widget_id }}">
+      <div class="kpi-title">{{ widget.title }}</div>
+      <div class="kpi-value">{{ widget.value }}</div>
       {% if widget.delta_label %}
         <div class="card-delta">{{ widget.delta_label }}</div>
       {% endif %}
       {% if widget.help_text %}
-        <div class="card-help">{{ widget.help_text }}</div>
+        <div class="kpi-subtitle">{{ widget.help_text }}</div>
       {% endif %}
     </article>
   {% endfor %}

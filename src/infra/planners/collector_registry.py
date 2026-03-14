@@ -8,7 +8,7 @@ from src.app.contracts import MetricCollector
 from ..collectors import (
     CategoricalDistributionCollector,
     ColumnNullsCollector,
-    DataQualityCollector,
+    ColumnSummaryCollector,
     FreshnessCollector,
     OverviewCollector,
     StorageCollector,
@@ -44,8 +44,8 @@ class DefaultCollectorRegistry(CollectorRegistry):
                 FreshnessCollector(),
                 VolumeTrendCollector(),
                 StorageCollector(stats_reader=stats_reader),
-                DataQualityCollector(),
                 ColumnNullsCollector(),
+                ColumnSummaryCollector(),
                 CategoricalDistributionCollector(),
                 TextProfileCollector(),
                 TimestampProfileCollector(),

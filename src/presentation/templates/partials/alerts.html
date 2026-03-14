@@ -1,8 +1,8 @@
 <div class="{{ wrapper_class }}">
   {% for alert in alerts %}
-    <article class="alert" id="widget-{{ alert.widget_id }}">
+    {% set level = (alert.critic_level.value if alert.critic_level is defined else 'warning') | lower %}
+    <article class="alert alert--{{ level }}" id="widget-{{ alert.widget_id }}">
       <h3 class="alert-title">{{ alert.title }}</h3>
-      <div class="muted">Severity: {{ alert.critic_level.value if alert.critic_level is defined else alert.critic_level }}</div>
       <p class="alert-message">{{ alert.message }}</p>
       {% if alert.details %}
         <ul class="alert-details">

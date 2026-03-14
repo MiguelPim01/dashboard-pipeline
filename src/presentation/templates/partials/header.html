@@ -1,36 +1,18 @@
-<header class="page-header">
-  <div class="header-top">
+<header class="report-header">
+  <div class="report-header__content">
     <div>
-      <h1 class="page-title">{{ report.metadata.title }}</h1>
+      <div class="eyebrow eyebrow--header">Database report</div>
+      <h1>{{ report.metadata.title }}</h1>
       {% if report.metadata.subtitle %}
-        <p class="page-subtitle">{{ report.metadata.subtitle }}</p>
+        <p>{{ report.metadata.subtitle }}</p>
+      {% else %}
+        <p>Static profiling report generated from PostgreSQL for local review and iteration before production rollout.</p>
       {% endif %}
     </div>
-  </div>
-
-  <div class="meta-strip">
-    <div class="meta-card">
-      <span class="meta-label">Table</span>
-      <span class="meta-value">{{ report.metadata.table_qualified_name }}</span>
-    </div>
-
-    {% if report.metadata.row_count is not none %}
-      <div class="meta-card">
-        <span class="meta-label">Rows</span>
-        <span class="meta-value">{{ report.metadata.row_count }}</span>
-      </div>
-    {% endif %}
-
-    {% if report.metadata.execution_duration_ms is not none %}
-      <div class="meta-card">
-        <span class="meta-label">Execution time</span>
-        <span class="meta-value">{{ report.metadata.execution_duration_ms }} ms</span>
-      </div>
-    {% endif %}
-
-    <div class="meta-card">
-      <span class="meta-label">Generated at</span>
-      <span class="meta-value">{{ report.metadata.generated_at }}</span>
+    <div class="report-header__meta">
+      <div><span>Tabela</span><strong>{{ report.metadata.table_qualified_name }}</strong></div>
+      <div><span>Linhas</span><strong>{{ report.metadata.row_count if report.metadata.row_count is not none else '—' }}</strong></div>
+      <div><span>Gerado em</span><strong>{{ report.metadata.generated_at }}</strong></div>
     </div>
   </div>
 </header>

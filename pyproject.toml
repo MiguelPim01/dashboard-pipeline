@@ -11,6 +11,7 @@ dependencies = [
     "pydantic>=2.12.5",
     "pydantic-settings>=2.13.1",
     "sqlalchemy>=2.0.48",
+    "tqdm>=4.67.3",
 ]
 
 [dependency-groups]

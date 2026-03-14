@@ -1,360 +1,388 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ report.metadata.title }}</title>
-    <style>
-      :root {
-        --bg: #f8fafc;
-        --panel: #ffffff;
-        --panel-soft: #f1f5f9;
-        --text: #0f172a;
-        --muted: #475569;
-        --border: #e2e8f0;
-        --shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
-        --critical-bg: #fff7ed;
-        --critical-border: #fdba74;
-      }
-
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-      body {
-        margin: 0;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: var(--text);
-        background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
-      }
-
-      .container {
-        width: min(1400px, calc(100vw - 32px));
-        margin: 0 auto;
-        padding: 24px 0 48px;
-      }
-
-      .page-header,
-      .section,
-      .footer {
-        background: rgba(255,255,255,0.86);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(226, 232, 240, 0.85);
-        box-shadow: var(--shadow);
-        border-radius: 24px;
-      }
-
-      .page-header,
-      .footer {
-        padding: 28px;
-      }
-
-      .header-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 20px;
-      }
-
-      .page-title {
-        margin: 0;
-        font-size: clamp(2rem, 3vw, 2.8rem);
-        line-height: 1.05;
-      }
-
-      .page-subtitle {
-        margin: 10px 0 0;
-        max-width: 72ch;
-        color: var(--muted);
-        font-size: 1rem;
-      }
-
-      .meta-strip {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 12px;
-        margin-top: 22px;
-      }
-
-      .meta-card,
-      .card,
-      .widget-box,
-      .alert {
-        border-radius: 18px;
-        border: 1px solid var(--border);
-        background: var(--panel);
-      }
-
-      .meta-card {
-        padding: 14px 16px;
-        background: var(--panel-soft);
-      }
-
-      .meta-label {
-        display: block;
-        margin-bottom: 6px;
-        font-size: 0.78rem;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-      }
-
-      .meta-value {
-        font-size: 1rem;
-        font-weight: 700;
-      }
-
-      .global-alerts,
-      .section-alerts {
-        display: grid;
-        gap: 12px;
-      }
-
-      .global-alerts {
-        margin-top: 18px;
-      }
-
-      .section {
-        margin-top: 24px;
-        padding: 24px;
-      }
-
-      .section-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 18px;
-      }
-
-      .section-title {
-        margin: 0;
-        font-size: 1.45rem;
-      }
-
-      .section-subtitle,
-      .muted {
-        color: var(--muted);
-      }
-
-      .section-subtitle {
-        margin: 6px 0 0;
-      }
-
-      .cards-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-      }
-
-      .widgets-grid {
-        display: grid;
-        gap: 16px;
-        margin-top: 18px;
-      }
-
-      .card,
-      .widget-box,
-      .alert {
-        padding: 18px;
-      }
-
-      .widget-title,
-      .card-title,
-      .alert-title {
-        margin: 0 0 8px;
-        font-size: 0.95rem;
-        color: var(--muted);
-      }
-
-      .card-value {
-        margin: 0;
-        font-size: 2rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-      }
-
-      .card-delta {
-        margin-top: 8px;
-        font-size: 0.92rem;
-        font-weight: 600;
-      }
-
-      .card-help,
-      .widget-subtitle {
-        margin-top: 10px;
-        color: var(--muted);
-        font-size: 0.92rem;
-      }
-
-      .alert {
-        background: var(--critical-bg);
-        border-color: var(--critical-border);
-      }
-
-      .alert-message {
-        margin: 6px 0 0;
-        font-weight: 600;
-      }
-
-      .alert-details {
-        margin: 12px 0 0 18px;
-        color: var(--muted);
-      }
-
-      .table-wrapper {
-        width: 100%;
-        overflow-x: auto;
-        margin-top: 12px;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 680px;
-      }
-
-      thead th {
-        text-align: left;
-        font-size: 0.84rem;
-        color: var(--muted);
-        background: var(--panel-soft);
-        border-bottom: 1px solid var(--border);
-        padding: 12px 14px;
-        position: sticky;
-        top: 0;
-      }
-
-      tbody td {
-        padding: 12px 14px;
-        border-bottom: 1px solid var(--border);
-        vertical-align: top;
-      }
-
-      tbody tr:hover {
-        background: #f8fafc;
-      }
-
-      .chart-shell {
-        margin-top: 12px;
-      }
-
-      .chart-canvas-wrap {
-        position: relative;
-        min-height: 220px;
-      }
-
-      .chart-canvas {
-        width: 100%;
-        display: block;
-      }
-
-      .chart-debug {
-        margin-top: 14px;
-        padding: 12px 14px;
-        border-radius: 14px;
-        background: #0f172a;
-        color: #e2e8f0;
-        overflow-x: auto;
-        font-size: 0.82rem;
-        line-height: 1.45;
-      }
-
-      .text-block-body {
-        margin: 12px 0 0;
-        line-height: 1.7;
-        white-space: pre-wrap;
-      }
-
-      .empty-state {
-        padding: 16px 18px;
-        border-radius: 16px;
-        border: 1px dashed var(--border);
-        color: var(--muted);
-        background: rgba(248, 250, 252, 0.9);
-      }
-
-      .footer {
-        margin-top: 24px;
-        color: var(--muted);
-      }
-
-      @media (max-width: 760px) {
-        .container { width: min(100vw - 20px, 100%); }
-        .page-header, .section, .footer { padding: 18px; border-radius: 20px; }
-        .header-top, .section-header { flex-direction: column; }
-        .cards-grid { grid-template-columns: 1fr; }
-      }
-    </style>
+    <link rel="stylesheet" href="./assets/css/report.css">
   </head>
   <body>
-    <div class="container">
-      {% include "partials/header.html" %}
+    {% set overview_section = report.find_section('overview') %}
+    {% set volume_section = report.find_section('volume_trends') %}
+    {% set freshness_section = report.find_section('freshness') %}
+    {% set storage_section = report.find_section('storage') %}
+    {% set column_section = report.find_section('column_profiles') %}
+    {% set quality_section = report.find_section('quality') %}
 
-      {% if report.global_alerts %}
-        {% with alerts=report.global_alerts, wrapper_class='global-alerts' %}
-          {% include "partials/alerts.html" %}
-        {% endwith %}
-      {% endif %}
+    <div class="layout no-sidebar">
+      <main class="content">
+        {% include "partials/header.html" %}
 
-      {% for section in report.sorted_sections %}
-        <section class="section" id="section-{{ section.key }}">
-          <div class="section-header">
+        {% if report.global_alerts %}
+          {% with alerts=report.global_alerts, wrapper_class='global-alerts' %}
+            {% include "partials/alerts.html" %}
+          {% endwith %}
+        {% endif %}
+
+        <section class="section section-hero" id="sec-overview">
+          <div class="hero-grid">
             <div>
-              <h2 class="section-title">{{ section.title }}</h2>
-              {% if section.subtitle %}
-                <p class="section-subtitle">{{ section.subtitle }}</p>
-              {% endif %}
+              <div class="eyebrow">Relatório visual consolidado</div>
+              <h1>{{ report.metadata.table_qualified_name }}</h1>
+              <p class="hero-subtitle">
+                {{ report.metadata.subtitle or 'Relatório com foco em volume, frescor, armazenamento e perfil das colunas.' }}
+              </p>
+            </div>
+            <div class="meta-panel">
+              <div><strong>Linhas:</strong> {{ report.metadata.row_count if report.metadata.row_count is not none else '—' }}</div>
+              <div><strong>Execução:</strong> {{ report.metadata.execution_duration_ms ~ ' ms' if report.metadata.execution_duration_ms is not none else '—' }}</div>
+              <div><strong>Gerado em:</strong> {{ report.metadata.generated_at }}</div>
             </div>
           </div>
 
-          {% if section.alerts %}
-            {% with alerts=section.alerts, wrapper_class='section-alerts' %}
-              {% include "partials/alerts.html" %}
-            {% endwith %}
-          {% endif %}
+          <nav class="inner-nav">
+            <a href="#sec-overview">Overview</a>
+            <a href="#sec-volume">Volume de Dados</a>
+            {% if freshness_section %}<a href="#sec-freshness">Freshness</a>{% endif %}
+            {% if storage_section %}<a href="#sec-storage">Storage</a>{% endif %}
+            <a href="#sec-descriptive">Estatísticas Descritivas</a>
+            <a href="#sec-columns">Colunas</a>
+            {% if quality_section %}<a href="#sec-extra">Diagnósticos</a>{% endif %}
+          </nav>
 
-          {% set kpi_cards = [] %}
-          {% set other_widgets = [] %}
-          {% for widget in section.widgets %}
-            {% if widget.__class__.__name__ == 'KpiCard' %}
-              {% set _ = kpi_cards.append(widget) %}
-            {% else %}
-              {% set _ = other_widgets.append(widget) %}
+          {% if overview_section %}
+            {% set overview_cards = [] %}
+            {% for widget in overview_section.widgets %}
+              {% if widget.__class__.__name__ == 'KpiCard' %}
+                {% set _ = overview_cards.append(widget) %}
+              {% endif %}
+            {% endfor %}
+            {% if overview_section.alerts %}
+              {% with alerts=overview_section.alerts, wrapper_class='section-alerts' %}
+                {% include "partials/alerts.html" %}
+              {% endwith %}
             {% endif %}
-          {% endfor %}
-
-          {% if kpi_cards %}
-            {% with cards=kpi_cards %}
-              {% include "partials/cards.html" %}
-            {% endwith %}
-          {% endif %}
-
-          {% if other_widgets %}
-            <div class="widgets-grid">
-              {% for widget in other_widgets %}
-                {% if widget.__class__.__name__ == 'ChartWidget' %}
-                  {% include "partials/chart.html" %}
-                {% elif widget.__class__.__name__ == 'TableWidget' %}
-                  {% include "partials/table.html" %}
-                {% elif widget.__class__.__name__ == 'TextBlockWidget' %}
-                  <article class="widget-box" id="widget-{{ widget.widget_id }}">
-                    <h3 class="widget-title">{{ widget.title }}</h3>
-                    {% if widget.subtitle %}
-                      <div class="widget-subtitle">{{ widget.subtitle }}</div>
-                    {% endif %}
-                    <div class="text-block-body">{{ widget.body }}</div>
-                  </article>
-                {% else %}
-                  {{ render_widget(widget) }}
-                {% endif %}
-              {% endfor %}
-            </div>
-          {% elif not kpi_cards and not section.alerts %}
-            <div class="empty-state">No widgets were generated for this section.</div>
+            {% if overview_cards %}
+              {% with cards=overview_cards %}
+                {% include "partials/cards.html" %}
+              {% endwith %}
+            {% endif %}
           {% endif %}
         </section>
-      {% endfor %}
 
-      {% include "partials/footer.html" %}
+        <section class="section" id="sec-volume">
+          <div class="section-header">
+            <div>
+              <h2>Volume de Dados</h2>
+              <p class="section-description">
+                Visão do crescimento temporal da tabela, com destaque para o comportamento do volume ao longo do tempo.
+              </p>
+            </div>
+          </div>
+
+          {% if volume_section %}
+            {% set volume_charts = [] %}
+            {% set volume_texts = [] %}
+            {% for widget in volume_section.widgets %}
+              {% if widget.__class__.__name__ == 'ChartWidget' %}
+                {% set _ = volume_charts.append(widget) %}
+              {% else %}
+                {% set _ = volume_texts.append(widget) %}
+              {% endif %}
+            {% endfor %}
+
+            {% if volume_section.alerts %}
+              {% with alerts=volume_section.alerts, wrapper_class='section-alerts' %}
+                {% include "partials/alerts.html" %}
+              {% endwith %}
+            {% endif %}
+
+            {% if volume_charts %}
+              <div class="chart-grid chart-grid--2up">
+                {% for widget in volume_charts %}
+                  {% include "partials/chart.html" %}
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {% if volume_texts %}
+              <div class="widgets-grid compact-grid">
+                {% for widget in volume_texts %}
+                  {% if widget.__class__.__name__ == 'TableWidget' %}
+                    {% include "partials/table.html" %}
+                  {% elif widget.__class__.__name__ == 'TextBlockWidget' %}
+                    <article class="widget-box text-card" id="widget-{{ widget.widget_id }}">
+                      <h3 class="widget-title">{{ widget.title }}</h3>
+                      {% if widget.subtitle %}<div class="widget-subtitle">{{ widget.subtitle }}</div>{% endif %}
+                      <div class="text-block-body">{{ widget.body }}</div>
+                    </article>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% else %}
+            <div class="empty-state">No volume trend charts were generated for this report.</div>
+          {% endif %}
+        </section>
+
+        {% if freshness_section %}
+          <section class="section" id="sec-freshness">
+            <div class="section-header">
+              <div>
+                <h2>Freshness</h2>
+                <p class="section-description">
+                  Recência dos dados com base na principal coluna temporal identificada para a tabela.
+                </p>
+              </div>
+            </div>
+
+            {% if freshness_section.alerts %}
+              {% with alerts=freshness_section.alerts, wrapper_class='section-alerts' %}
+                {% include "partials/alerts.html" %}
+              {% endwith %}
+            {% endif %}
+
+            {% set freshness_cards = [] %}
+            {% set freshness_others = [] %}
+            {% for widget in freshness_section.widgets %}
+              {% if widget.__class__.__name__ == 'KpiCard' %}
+                {% set _ = freshness_cards.append(widget) %}
+              {% else %}
+                {% set _ = freshness_others.append(widget) %}
+              {% endif %}
+            {% endfor %}
+
+            {% if freshness_cards %}
+              {% with cards=freshness_cards %}
+                {% include "partials/cards.html" %}
+              {% endwith %}
+            {% endif %}
+
+            {% if freshness_others %}
+              <div class="widgets-grid compact-grid">
+                {% for widget in freshness_others %}
+                  {% if widget.__class__.__name__ == 'ChartWidget' %}
+                    {% include "partials/chart.html" %}
+                  {% elif widget.__class__.__name__ == 'TableWidget' %}
+                    {% include "partials/table.html" %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </section>
+        {% endif %}
+
+        {% if storage_section %}
+          <section class="section" id="sec-storage">
+            <div class="section-header">
+              <div>
+                <h2>Storage</h2>
+                <p class="section-description">
+                  Pegada física da tabela e estatísticas de execução do PostgreSQL para entender custo operacional e manutenção.
+                </p>
+              </div>
+            </div>
+
+            {% if storage_section.alerts %}
+              {% with alerts=storage_section.alerts, wrapper_class='section-alerts' %}
+                {% include "partials/alerts.html" %}
+              {% endwith %}
+            {% endif %}
+
+            {% set storage_cards = [] %}
+            {% set storage_tables = [] %}
+            {% for widget in storage_section.widgets %}
+              {% if widget.__class__.__name__ == 'KpiCard' %}
+                {% set _ = storage_cards.append(widget) %}
+              {% elif widget.__class__.__name__ == 'TableWidget' %}
+                {% set _ = storage_tables.append(widget) %}
+              {% endif %}
+            {% endfor %}
+
+            {% if storage_section.subtitle %}
+              <div class="info-box">{{ storage_section.subtitle }}</div>
+            {% endif %}
+
+            {% if storage_cards %}
+              {% with cards=storage_cards %}
+                {% include "partials/cards.html" %}
+              {% endwith %}
+            {% endif %}
+
+            {% if storage_tables %}
+              <div class="widgets-grid compact-grid">
+                {% for widget in storage_tables %}
+                  {% include "partials/table.html" %}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </section>
+        {% endif %}
+
+        <section class="section" id="sec-descriptive">
+          <div class="section-header">
+            <div>
+              <h2>Estatísticas Descritivas</h2>
+              <p class="section-description">
+                Indicadores visuais para identificar colunas com mais nulos, strings vazias e distribuições categóricas relevantes.
+              </p>
+            </div>
+          </div>
+
+          {% if column_section %}
+            {% set desc_charts = [] %}
+            {% set column_tables = [] %}
+            {% set column_texts = [] %}
+            {% for widget in column_section.widgets %}
+              {% if widget.__class__.__name__ == 'ChartWidget' %}
+                {% set _ = desc_charts.append(widget) %}
+              {% elif widget.__class__.__name__ == 'TableWidget' %}
+                {% set _ = column_tables.append(widget) %}
+              {% elif widget.__class__.__name__ == 'TextBlockWidget' %}
+                {% set _ = column_texts.append(widget) %}
+              {% endif %}
+            {% endfor %}
+
+            {% if desc_charts %}
+              <div class="chart-grid chart-grid--2up">
+                {% for widget in desc_charts %}
+                  {% include "partials/chart.html" %}
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="empty-state">No descriptive charts were generated for the current column profile.</div>
+            {% endif %}
+          {% else %}
+            <div class="empty-state">Column profiling results are not available for this run.</div>
+          {% endif %}
+        </section>
+
+        <section class="section" id="sec-columns">
+          <div class="section-header">
+            <div>
+              <h2>Colunas</h2>
+              <p class="section-description">
+                Esta seção reúne uma visão consolidada por coluna: total de linhas, nulidade, strings vazias,
+                cardinalidade estimada e estatísticas numéricas básicas.
+              </p>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <h3>Como interpretar esta seção</h3>
+            <ul>
+              <li><strong>Total linhas</strong>: total da tabela usado como referência para os percentuais.</li>
+              <li><strong>% nulos</strong>: percentual da coluna com valor ausente.</li>
+              <li><strong>% strings vazias</strong>: percentual de valores textuais vazios na tabela inteira.</li>
+              <li><strong>Distintos estimados</strong>: estimativa vinda das estatísticas internas do PostgreSQL.</li>
+              <li><strong>Métricas numéricas</strong>: mínimo, máximo, média, mediana e desvio padrão para colunas numéricas.</li>
+            </ul>
+          </div>
+
+          {% if column_section %}
+            {% if column_section.alerts %}
+              {% with alerts=column_section.alerts, wrapper_class='section-alerts' %}
+                {% include "partials/alerts.html" %}
+              {% endwith %}
+            {% endif %}
+
+            {% set ns = namespace(summary_widget=None) %}
+            {% for widget in column_section.widgets %}
+              {% if widget.__class__.__name__ == 'TableWidget' and widget.widget_id == 'column-catalog-summary' %}
+                {% set ns.summary_widget = widget %}
+              {% endif %}
+            {% endfor %}
+
+            {% if ns.summary_widget %}
+              {% with widget=ns.summary_widget %}
+                {% include "partials/table.html" %}
+              {% endwith %}
+            {% else %}
+              <div class="empty-state">No consolidated column table was generated for this profiling run.</div>
+            {% endif %}
+          {% else %}
+            <div class="empty-state">Column profiling results are not available for this run.</div>
+          {% endif %}
+        </section>
+
+        {% if quality_section %}
+          <section class="section" id="sec-extra">
+            <div class="section-header">
+              <div>
+                <h2>Diagnósticos Adicionais</h2>
+                <p class="section-description">
+                  Complementos de qualidade e verificações específicas geradas pelos coletores adicionais.
+                </p>
+              </div>
+            </div>
+
+            {% if quality_section.alerts %}
+              {% with alerts=quality_section.alerts, wrapper_class='section-alerts' %}
+                {% include "partials/alerts.html" %}
+              {% endwith %}
+            {% endif %}
+
+            {% if quality_section.widgets %}
+              <div class="widgets-grid compact-grid">
+                {% for widget in quality_section.widgets %}
+                  {% if widget.__class__.__name__ == 'ChartWidget' %}
+                    {% include "partials/chart.html" %}
+                  {% elif widget.__class__.__name__ == 'TableWidget' %}
+                    {% include "partials/table.html" %}
+                  {% elif widget.__class__.__name__ == 'TextBlockWidget' %}
+                    <article class="widget-box text-card" id="widget-{{ widget.widget_id }}">
+                      <h3 class="widget-title">{{ widget.title }}</h3>
+                      {% if widget.subtitle %}<div class="widget-subtitle">{{ widget.subtitle }}</div>{% endif %}
+                      <div class="text-block-body">{{ widget.body }}</div>
+                    </article>
+                  {% else %}
+                    {{ render_widget(widget) }}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </section>
+        {% endif %}
+
+        {% for section in report.sorted_sections %}
+          {% if section.key not in ('overview', 'volume_trends', 'freshness', 'storage', 'column_profiles', 'quality') %}
+            <section class="section" id="section-{{ section.key }}">
+              <div class="section-header">
+                <div>
+                  <h2>{{ section.title }}</h2>
+                  {% if section.subtitle %}<p class="section-description">{{ section.subtitle }}</p>{% endif %}
+                </div>
+              </div>
+
+              {% if section.alerts %}
+                {% with alerts=section.alerts, wrapper_class='section-alerts' %}
+                  {% include "partials/alerts.html" %}
+                {% endwith %}
+              {% endif %}
+
+              <div class="widgets-grid compact-grid">
+                {% for widget in section.widgets %}
+                  {% if widget.__class__.__name__ == 'ChartWidget' %}
+                    {% include "partials/chart.html" %}
+                  {% elif widget.__class__.__name__ == 'TableWidget' %}
+                    {% include "partials/table.html" %}
+                  {% elif widget.__class__.__name__ == 'TextBlockWidget' %}
+                    <article class="widget-box text-card" id="widget-{{ widget.widget_id }}">
+                      <h3 class="widget-title">{{ widget.title }}</h3>
+                      {% if widget.subtitle %}<div class="widget-subtitle">{{ widget.subtitle }}</div>{% endif %}
+                      <div class="text-block-body">{{ widget.body }}</div>
+                    </article>
+                  {% else %}
+                    {{ render_widget(widget) }}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </section>
+          {% endif %}
+        {% endfor %}
+
+        {% include "partials/footer.html" %}
+      </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

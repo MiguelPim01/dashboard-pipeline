@@ -1,5 +1,6 @@
 from .column_distribution_collector import CategoricalDistributionCollector
 from .column_nulls_collector import ColumnNullsCollector
+from .column_summary_collector import ColumnSummaryCollector
 from .freshness_collector import FreshnessCollector
 from .overview_collector import OverviewCollector
 from .quality_collector import DataQualityCollector
@@ -11,6 +12,7 @@ from .volume_collector import VolumeTrendCollector
 __all__ = [
     "CategoricalDistributionCollector",
     "ColumnNullsCollector",
+    "ColumnSummaryCollector",
     "DataQualityCollector",
     "FreshnessCollector",
     "OverviewCollector",

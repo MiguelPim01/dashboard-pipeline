@@ -1,11 +1,19 @@
-<article class="widget-box" id="widget-{{ widget.widget_id }}">
-  <h3 class="widget-title">{{ widget.title }}</h3>
-  {% if widget.subtitle %}
-    <div class="widget-subtitle">{{ widget.subtitle }}</div>
+{% set is_column_summary = widget.widget_id == 'column-catalog-summary' %}
+
+<article class="widget-box table-card{% if widget.compact %} table-card--compact{% endif %}{% if is_column_summary %} table-card--columns{% endif %}" id="widget-{{ widget.widget_id }}">
+  {% if not is_column_summary %}
+    <div class="widget-header">
+      <div>
+        <h3 class="widget-title">{{ widget.title }}</h3>
+        {% if widget.subtitle %}
+          <div class="widget-subtitle">{{ widget.subtitle }}</div>
+        {% endif %}
+      </div>
+    </div>
   {% endif %}
 
-  <div class="table-wrapper">
-    <table>
+  <div class="table-wrapper{% if is_column_summary %} table-wrapper--columns{% endif %}">
+    <table {% if is_column_summary %} class="columns-summary-table"{% endif %}>
       <thead>
         <tr>
           {% for column in widget.columns %}

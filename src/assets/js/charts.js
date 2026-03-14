@@ -20,32 +20,41 @@
     return String(value).toLowerCase() === "true";
   }
 
-  function buildDataset(dataset, index, chartType, labels) {
+  function buildDataset(dataset, index, chartType) {
     const palette = [
-      "#2563eb",
-      "#7c3aed",
-      "#0891b2",
-      "#16a34a",
-      "#ea580c",
-      "#dc2626",
-      "#ca8a04",
-      "#4f46e5",
-      "#0f766e",
-      "#9333ea",
-      "#be123c",
-      "#0369a1"
+      "#4f7df3",
+      "#3fa9dc",
+      "#8b6be8",
+      "#47c19a",
+      "#f0ad3d",
+      "#ec6b64",
+      "#6d7ae0",
+      "#d962a0",
+      "#57c26f",
+      "#9a6be8",
+      "#4d7fe6",
+      "#36a8d9"
     ];
 
     const values = Array.isArray(dataset.data) ? dataset.data : [];
 
-    // One color per bar
     if (chartType === "bar") {
       return {
         label: dataset.label,
         data: values,
-        backgroundColor: values.map((_, i) => palette[i % palette.length] + "99"),
+        backgroundColor: values.map((_, i) => palette[i % palette.length] + "cc"),
         borderColor: values.map((_, i) => palette[i % palette.length]),
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: {
+          topLeft: 10,
+          topRight: 10,
+          bottomLeft: 0,
+          bottomRight: 0
+        },
+        borderSkipped: false,
+        categoryPercentage: 0.72,
+        barPercentage: 0.9,
+        maxBarThickness: 42
       };
     }
 
@@ -64,17 +73,58 @@
     };
   }
 
-  function getChartOptions(chartType, stacked) {
+  function getChartOptions(chartType, stacked, datasetCount, labelCount) {
     const cartesian = !["pie", "doughnut"].includes(chartType);
+
+    if (chartType === "bar") {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 650,
+          easing: "easeOutQuart"
+        },
+        plugins: {
+          legend: {
+            display: datasetCount > 1,
+            position: "top"
+          },
+          tooltip: {
+            enabled: true
+          }
+        },
+        scales: {
+          x: {
+            stacked: stacked,
+            grid: {
+              display: false
+            },
+            ticks: {
+              autoSkip: labelCount > 10,
+              maxRotation: 35,
+              minRotation: 35,
+              color: "#64748b"
+            }
+          },
+          y: {
+            stacked: stacked,
+            beginAtZero: true,
+            grid: {
+              color: "rgba(148, 163, 184, 0.22)"
+            },
+            ticks: {
+              precision: 0,
+              color: "#64748b"
+            }
+          }
+        }
+      };
+    }
 
     if (!cartesian) {
       return {
         responsive: true,
         maintainAspectRatio: false,
-        interaction: {
-          mode: "index",
-          intersect: false
-        },
         plugins: {
           legend: {
             position: "top"
@@ -106,13 +156,20 @@
           stacked: stacked,
           grid: {
             display: false
+          },
+          ticks: {
+            color: "#64748b"
           }
         },
         y: {
           stacked: stacked,
           beginAtZero: true,
+          grid: {
+            color: "rgba(148, 163, 184, 0.18)"
+          },
           ticks: {
-            precision: 0
+            precision: 0,
+            color: "#64748b"
           }
         }
       }
@@ -152,7 +209,7 @@
 
     const normalizedType = chartType === "area" ? "line" : chartType;
     const normalizedDatasets = datasets.map((dataset, index) => {
-      const built = buildDataset(dataset, index, normalizedType, labels);
+      const built = buildDataset(dataset, index, normalizedType);
 
       if (chartType === "area") {
         built.fill = true;
@@ -160,18 +217,18 @@
 
       if (["pie", "doughnut"].includes(normalizedType)) {
         const palette = [
-          "#2563eb",
-          "#7c3aed",
-          "#0891b2",
-          "#16a34a",
-          "#ea580c",
-          "#dc2626",
-          "#ca8a04",
-          "#4f46e5",
-          "#0f766e",
-          "#9333ea",
-          "#be123c",
-          "#0369a1"
+          "#4f7df3",
+          "#3fa9dc",
+          "#8b6be8",
+          "#47c19a",
+          "#f0ad3d",
+          "#ec6b64",
+          "#6d7ae0",
+          "#d962a0",
+          "#57c26f",
+          "#9a6be8",
+          "#4d7fe6",
+          "#36a8d9"
         ];
         built.backgroundColor = labels.map((_, i) => palette[i % palette.length]);
         built.borderColor = "#ffffff";
@@ -187,7 +244,12 @@
         labels,
         datasets: normalizedDatasets
       },
-      options: getChartOptions(normalizedType, stacked)
+      options: getChartOptions(
+        normalizedType,
+        stacked,
+        normalizedDatasets.length,
+        labels.length
+      )
     };
 
     // eslint-disable-next-line no-new
